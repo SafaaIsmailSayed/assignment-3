@@ -2,32 +2,30 @@ clc
 clear
 %%time = '05:57:22 am';
 time = input("Please, Enter the time","s");
-flag_pm = 0;
-flag_am = 0;
-index_pm = 0;
-index_am = 0;
+%% variables
 index_1st_colon = find(time == ':', 1) - 1;
+flag_am=0;
+flag_pm=0;
 hours = 0;
-for i = 1 : length(time) 
-    if (time(i) == 'A' || time(i) == 'a') %% am
-        flag_am = 1; 
-        index_am = i - 1;
-    elseif (time(i) == 'P' || time(i) == 'p') %% pm
-        flag_pm = 1;
-        index_pm = i - 1;
-    end
-end 
-if(flag_am)%% to convert am time
-    if(time(1:index_1st_colon) == '12') %% If hour == 12 
-        time_conversion = ['00' time(index_1st_colon + 1:index_am)];
-    else    
-        time_conversion = time(1:index_am); 
-    end
-elseif(flag_pm) %% to convert pm
-    if(time(1:index_1st_colon) == '12')% If hour == 12 
-        time_conversion = time(1:index_pm);
-    else
-        hours = str2double(time(1:index_1st_colon)) + 12 ;
-        time_conversion = [num2str(hours) time(index_1st_colon + 1:index_pm)];
-    end
-end    
+%% Convert to 24-hour format
+hours = str2double(time(1:index_1st_colon));
+if(hours < 12) && (hours >= 0)
+flag_am = 1;
+elseif (hours < 24) && (hours >= 12)
+flag_pm = 1;
+end
+%% The main code
+if(hours >= 24)
+        time_conversion = 'Invalid Input';
+  if (hours >= 12) %% to convert pm
+     period = 'pm';
+  else (hours > 12);
+      hours = hours - 12;
+  end
+elseif (hours < 24) && (hours >= 12)
+      period = 'am'; %% to convert am
+   if hours == 0
+      hours = 12;
+   end
+end
+
